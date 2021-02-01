@@ -37,9 +37,9 @@ public class Main extends Application {
         LineChart chart = new LineChart(chartField);
 
         chart.values.add(new Label(Color.rgb(10,10,10),chart,new Integer[]{10,20,30,40,50,60,70,80,90,100},new Integer[]{50,7,98,74,55,41,78,89,90,41}));
-        chart.values.add(new Label(Color.RED,chart,new Integer[]{10,20,30,40,50,60,70,80,90,100}, new Integer[]{1,42,468,75,860,458,75,12,35,45} ));
+        chart.values.add(new Label(Color.RED,chart,new Integer[]{10,20,30,40,50,60,70,80,90,100}, new Integer[]{1,42,68,75,80,58,75,12,35,45} ));
         chart.render(ctx);
-        Grid grid = new Grid(new GridProperties(20,Color.rgb(255,0,0,0.5),1),chartField);
+        Grid grid = new Grid(new GridProperties(20,Color.rgb(100,0,0,0.2),1),chartField);
         grid.renderMe(ctx);
 
     }

@@ -13,7 +13,7 @@ public class LineChart {
     public ChartField owner;
 
     public void render(GraphicsContext ctx){
-        ctx.setLineWidth(1);
+        ctx.setLineWidth(5);
 
         double minBottomValue = Double.MAX_VALUE;
         double minLeftValue = Double.MAX_VALUE;
