@@ -1,10 +1,8 @@
 package LineChart;
 
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 
 public class Label {
 
@@ -16,9 +14,10 @@ public class Label {
 
     public LineChart owner;
 
-    public Label(Color labelColor, LineChart owner,Integer bottomValues[],Integer leftValues[]) {
-        this.leftValues = Arrays.asList(leftValues);
-        this.bottomValues = Arrays.asList(bottomValues);
+    public Label(Color labelColor, LineChart owner,Integer[] bottomValues,Integer[] leftValues) {
+        this.leftValues.addAll(Arrays.asList(leftValues));
+
+        this.bottomValues.addAll(Arrays.asList(bottomValues));
         this.labelColor = labelColor;
         this.owner = owner;
     }

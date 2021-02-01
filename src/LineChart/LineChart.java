@@ -13,22 +13,66 @@ public class LineChart {
     public ChartField owner;
 
     public void render(GraphicsContext ctx){
+        ctx.setLineWidth(1);
+
+        double minBottomValue = Double.MAX_VALUE;
+        double minLeftValue = Double.MAX_VALUE;
+        double maxBottomValue = Double.MIN_VALUE;
+        double maxLeftValue = Double.MIN_VALUE;
+
         for (Label currentLabel : values) {
-            int leftValuePerPixel = getMaxValueOfList(currentLabel.leftValues) / owner.getHeight();
-            int bottomValuePerPixel = getMaxValueOfList(currentLabel.bottomValues) / owner.getWidth();
-            System.out.println("left: " + leftValuePerPixel + " bottom: " + bottomValuePerPixel);
+            minBottomValue = Math.min(minBottomValue, getMinValueOfList(currentLabel.bottomValues));
+            minLeftValue = Math.min(minLeftValue, getMinValueOfList(currentLabel.leftValues));
+            maxBottomValue = Math.max(maxBottomValue, getMaxValueOfList(currentLabel.bottomValues));
+            maxLeftValue = Math.max(maxLeftValue, getMaxValueOfList(currentLabel.leftValues));
+        }
+
+        double bottomRange = maxBottomValue - minBottomValue;
+        double leftRange = maxLeftValue - minLeftValue;
+
+        double bottomStep = owner.getWidth() / bottomRange;
+        double leftStep = owner.getHeight() / leftRange;
+
+        for (Label currentLabel : values) {
+            ctx.setStroke(currentLabel.labelColor);
+            System.out.println(owner.getHeight());
+
+            System.out.println(currentLabel.bottomValues.size());
+
+            for(int iteration = 0; iteration < currentLabel.leftValues.size()-1; iteration++){
+
+                double currentBottomValue = currentLabel.bottomValues.get(iteration);
+                double currentLeftValue = currentLabel.leftValues.get(iteration);
+                double nextBottomValue = currentLabel.bottomValues.get(iteration + 1);
+                double nextLeftValue = currentLabel.leftValues.get(iteration + 1);
+
+                ctx.strokeLine((currentBottomValue - minBottomValue) * bottomStep,
+                        owner.getHeight() - (currentLeftValue - minLeftValue) * leftStep,
+                        (nextBottomValue - minBottomValue) * bottomStep,
+                        owner.getHeight() - (nextLeftValue - minLeftValue) * leftStep);
+
+            }
         }
     }
 
     public int getMaxValueOfList(List<Integer> list){
         int maxValue = 0;
-        for(int i = 0;i<list.size();i++){
-            if(list.get(i)>maxValue){
-                maxValue = list.get(i);
+        for(int value : list){
+            if(value>maxValue){
+                maxValue = value;
+            }
+        }
+        return maxValue;
+    }
+    public int getMinValueOfList(List<Integer> list){
+        int minValue = 2100000000;
+        for (int value : list) {
+            if (value < minValue) {
+                minValue = value;
             }
 
         }
-        return maxValue;
+        return minValue;
     }
 
     public LineChart(ChartField owner) {
