@@ -46,10 +46,10 @@ public class LineChart {
                 double nextBottomValue = currentLabel.bottomValues.get(iteration + 1);
                 double nextLeftValue = currentLabel.leftValues.get(iteration + 1);
 
-                ctx.strokeLine((currentBottomValue - minBottomValue) * bottomStep,
-                        owner.getHeight() - (currentLeftValue - minLeftValue) * leftStep,
-                        (nextBottomValue - minBottomValue) * bottomStep,
-                        owner.getHeight() - (nextLeftValue - minLeftValue) * leftStep);
+                ctx.strokeLine((currentBottomValue - minBottomValue) * bottomStep + owner.getStartX(),
+                        owner.getHeight() - (currentLeftValue - minLeftValue) * leftStep + owner.getStartX(),
+                        (nextBottomValue - minBottomValue) * bottomStep  + owner.getStartX(),
+                        owner.getHeight() - (nextLeftValue - minLeftValue) * leftStep + owner.getStartY());
 
             }
         }
