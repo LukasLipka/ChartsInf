@@ -58,7 +58,18 @@ public class LineChart {
         }
         // rendering legend
         if(properties.showLegend){
-
+            int x;
+            int y;
+            switch (properties.legendOrientation){
+                case TOP: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12; break;
+                case BOTTOM: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 88; break;
+                case RIGHT: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
+                case LEFT: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
+                case RIGHT_BOTTOM_CORNER: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12; break;
+                case RIGHT_TOP_CORNER: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
+                case LEFT_BOTTOM_CORNER: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
+                case LEFT_TOP_CORNER: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
+            }
         }
     }
 

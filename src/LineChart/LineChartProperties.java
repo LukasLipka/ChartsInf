@@ -2,6 +2,7 @@ package LineChart;
 
 import javafx.scene.text.Font;
 import main.Properties;
+import misc.Orientation;
 
 import java.nio.file.Path;
 
@@ -10,6 +11,8 @@ public class LineChartProperties extends Properties {
     LineChart owner;
 
     boolean showLegend = true;
+
+    Orientation legendOrientation;
 
     boolean showBottomValues = true;
 
@@ -32,6 +35,17 @@ public class LineChartProperties extends Properties {
             sum += value;
         }
         return sum / values.length;
+    }
+
+    public LineChartProperties(LineChart owner, boolean showLegend, Orientation legendOrientation, boolean showBottomValues, boolean showLeftValues, int leftValuesLabelsStep, int bottomValuesLabelStep, Font fontUsed) {
+        this.owner = owner;
+        this.showLegend = showLegend;
+        this.legendOrientation = legendOrientation;
+        this.showBottomValues = showBottomValues;
+        this.showLeftValues = showLeftValues;
+        this.leftValuesLabelsStep = leftValuesLabelsStep;
+        this.bottomValuesLabelStep = bottomValuesLabelStep;
+        this.fontUsed = fontUsed;
     }
 
     public LineChartProperties(boolean showLegend, boolean showBottomValues, boolean showLeftValues, int leftValuesLabelsStep, int bottomValuesLabelStep, Font fontUsed) {
