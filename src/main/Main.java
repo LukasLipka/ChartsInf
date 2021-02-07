@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.ChartField;
@@ -18,6 +19,7 @@ import main.GridProperties;
 import LineChart.*;
 import sun.rmi.server.InactiveGroupException;
 
+import javax.sound.sampled.LineUnavailableException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,6 +39,8 @@ public class Main extends Application {
 
         GraphicsContext ctx = c.getGraphicsContext2D();
 
+       // showMainScreen(ctx);
+
         FlowPane root = new FlowPane(c);
         stage.setTitle("Grafy");
         stage.setScene(new Scene(root,1000, 1000));
@@ -48,6 +52,7 @@ public class Main extends Application {
             chooser.setTitle("Choose your .chart file");
             File file = chooser.showOpenDialog(stage);
             Path path = Paths.get(file.getAbsolutePath());
+            ctx.clearRect(0,0,1000,1000);
             consumeRaw(readRaw(path),ctx);
         });
 
@@ -65,6 +70,14 @@ public class Main extends Application {
 
     }
 
+    public void showMainScreen(GraphicsContext ctx) {
+        ctx.setFont(Font.font(200));
+        ctx.strokeText("Charts",225,150);
+        ctx.strokeRect(500,250,250,100);
+        ctx.strokeText("Load",750,250);
+        ctx.strokeRect(100,250,250,100);
+    }
+
     public String readRaw(Path path){
         try {
             return Files.readAllLines(path).toString().replace(",","\n").replace("[","").replace("]","").replace(" ","");
@@ -75,33 +88,36 @@ public class Main extends Application {
     }
 
     public void consumeRaw(String raw,GraphicsContext ctx){
-        ChartField field = new ChartField(Integer.parseInt(readCommand(raw,"chart-field-start-x")),
-                Integer.parseInt(readCommand(raw,"chart-field-start-y")),
-                Integer.parseInt(readCommand(raw,"chart-field-end-x")),
-                Integer.parseInt(readCommand(raw,"chart-field-end-y")),
+        String rawInst = raw;
+        ChartField field = new ChartField(Integer.parseInt(readCommand(rawInst,"chart-field-start-x")),
+                Integer.parseInt(readCommand(rawInst,"chart-field-start-y")),
+                Integer.parseInt(readCommand(rawInst,"chart-field-end-x")),
+                Integer.parseInt(readCommand(rawInst,"chart-field-end-y")),
                 new ChartFieldProperties(
-                        readCommand(raw, "chart-field-props-render-border").equals("true"),
-                Integer.parseInt(readCommand(raw,"chart-field-props-border-width"))
-                ,Color.rgb(Integer.parseInt(readCommand(raw,"chart-field-props-color-red")),
-                Integer.parseInt(readCommand(raw,"chart-field-props-color-green")),
-                Integer.parseInt(readCommand(raw,"chart-field-props-color-blue")),
-                Double.parseDouble(readCommand(raw,"chart-field-props-color-opacity")))
+                        readCommand(rawInst, "chart-field-props-render-border").equals("true"),
+                Integer.parseInt(readCommand(rawInst,"chart-field-props-border-width"))
+                ,Color.rgb(Integer.parseInt(readCommand(rawInst,"chart-field-props-color-red")),
+                Integer.parseInt(readCommand(rawInst,"chart-field-props-color-green")),
+                Integer.parseInt(readCommand(rawInst,"chart-field-props-color-blue")),
+                Double.parseDouble(readCommand(rawInst,"chart-field-props-color-opacity")))
         ));
         field.renderMe(ctx);
-        Grid grid = new Grid(new GridProperties(Integer.parseInt(readCommand(raw,"grid-size")),
+        Grid grid = new Grid(new GridProperties(Integer.parseInt(readCommand(rawInst,"grid-size")),
 
-                Color.rgb(Integer.parseInt(readCommand(raw,"grid-props-color-red")),
+                Color.rgb(Integer.parseInt(readCommand(rawInst,"grid-props-color-red")),
 
-                Integer.parseInt(readCommand(raw,"grid-props-color-green")),
-                Integer.parseInt(readCommand(raw,"grid-props-color-blue")),
-                Double.parseDouble(readCommand(raw,"grid-props-color-opacity"))),
-                Integer.parseInt(readCommand(raw,"grid-props-grid-width"))),field);
+                Integer.parseInt(readCommand(rawInst,"grid-props-color-green")),
+                Integer.parseInt(readCommand(rawInst,"grid-props-color-blue")),
+                Double.parseDouble(readCommand(rawInst,"grid-props-color-opacity"))),
+                Integer.parseInt(readCommand(rawInst,"grid-props-grid-width"))),field);
         grid.renderMe(ctx);
 
-        LineChart chart = new LineChart(field);
-
-        while(raw.contains("label")) {
-            String[] bottomValuess = readCommand(raw, "line-chart-label-bottom-values").split("\n");
+        LineChart chart = new LineChart(field,new LineChartProperties());
+        int test = 0;
+        //raw = raw.substring(raw.indexOf("label;") +6);
+        while(rawInst.contains("label;")) {
+            test++;
+            String[] bottomValuess = readCommand(rawInst, "line-chart-label-bottom-values").split("\n");
 
             Integer[] bottomValues = new Integer[bottomValuess.length];
             int i = 0;
@@ -111,7 +127,7 @@ public class Main extends Application {
                 i++;
             }
 
-            String[] leftValuess = readCommand(raw, "line-chart-label-left-values").split("\n");
+            String[] leftValuess = readCommand(rawInst, "line-chart-label-left-values").split("\n");
 
             Integer[] leftValues = new Integer[leftValuess.length];
             int x = 0;
@@ -121,19 +137,18 @@ public class Main extends Application {
                 x++;
             }
 
-
-            Label label = new Label(Color.rgb(Integer.parseInt(readCommand(raw, "label-color-red")),
-                    Integer.parseInt(readCommand(raw, "label-color-green")),
-                    Integer.parseInt(readCommand(raw, "label-color-blue")),
-                    Double.parseDouble(readCommand(raw, "label-color-opacity"))), chart,  bottomValues,leftValues);
+            Label label = new Label(Color.rgb(Integer.parseInt(readCommand(rawInst, "label-color-red")),
+                    Integer.parseInt(readCommand(rawInst, "label-color-green")),
+                    Integer.parseInt(readCommand(rawInst, "label-color-blue")),
+                    Double.parseDouble(readCommand(rawInst, "label-color-opacity"))), chart,  bottomValues,leftValues);
 
             chart.values.add(label);
-            if(raw.contains("label;")) {
-                raw = raw.substring(raw.indexOf("label;") + 6);
+            if(rawInst.contains("label;")) {
+                rawInst = rawInst.substring(rawInst.indexOf("label;") +6);
+
             }else{
                 break;
             }
-            System.out.println(raw);
             chart.render(ctx);
         }
 

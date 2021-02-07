@@ -12,7 +12,10 @@ public class LineChart {
 
     public ChartField owner;
 
+    public LineChartProperties properties;
+
     public void render(GraphicsContext ctx){
+        //rendering lines and series
         ctx.setLineWidth(5);
 
         double minBottomValue = Double.MAX_VALUE;
@@ -53,6 +56,10 @@ public class LineChart {
 
             }
         }
+        // rendering legend
+        if(properties.showLegend){
+
+        }
     }
 
     public int getMaxValueOfList(List<Integer> list){
@@ -75,7 +82,8 @@ public class LineChart {
         return minValue;
     }
 
-    public LineChart(ChartField owner) {
+    public LineChart(ChartField owner, LineChartProperties properties) {
         this.owner = owner;
+        this.properties = properties;
     }
 }
