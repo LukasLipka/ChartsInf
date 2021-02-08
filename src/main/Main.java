@@ -17,6 +17,7 @@ import main.ChartFieldProperties;
 import main.Grid;
 import main.GridProperties;
 import LineChart.*;
+import misc.Orientation;
 import sun.rmi.server.InactiveGroupException;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -112,7 +113,31 @@ public class Main extends Application {
                 Integer.parseInt(readCommand(rawInst,"grid-props-grid-width"))),field);
         grid.renderMe(ctx);
 
-        LineChart chart = new LineChart(field,new LineChartProperties());
+
+        Orientation lineChartOrientation;
+        switch (readCommand(rawInst,"line-chart-props-orientation").toLowerCase()){
+            case "right": lineChartOrientation = Orientation.RIGHT;break;
+            case "left": lineChartOrientation = Orientation.LEFT;break;
+            case "top": lineChartOrientation = Orientation.TOP;break;
+            case "bottom": lineChartOrientation = Orientation.BOTTOM;break;
+            case "left-bottom": lineChartOrientation = Orientation.LEFT_BOTTOM_CORNER;break;
+            case "left-top": lineChartOrientation = Orientation.LEFT_TOP_CORNER;break;
+            case "right-bottom": lineChartOrientation = Orientation.RIGHT_BOTTOM_CORNER;break;
+            case "right-top": lineChartOrientation = Orientation.RIGHT_TOP_CORNER;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + readCommand(rawInst, "line-chart-props-orientation").toLowerCase());
+        }
+        LineChart chart = new LineChart(field,new LineChartProperties(
+                readCommand(rawInst,"line-chart-props-render-legend") == "true",
+                readCommand(rawInst,"line-chart-props-show-bottom-values") == "true",
+                readCommand(rawInst,"line-chart-props-show-left-values") == "true",
+                lineChartOrientation,
+                Integer.parseInt(readCommand(rawInst,"line-chart-props-left-values-step")),
+                Integer.parseInt(readCommand(rawInst,"line-chart-props-bottom-values-step")),
+                Font.font("Arial",15)
+
+        ));
         int test = 0;
         //raw = raw.substring(raw.indexOf("label;") +6);
         while(rawInst.contains("label;")) {

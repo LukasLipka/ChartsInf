@@ -59,6 +59,7 @@ public class LineChart {
         }
         // rendering legend
         if(properties.showLegend){
+            ctx.setFont(properties.fontUsed);
             int x;
             int y;
             switch (properties.legendOrientation) {

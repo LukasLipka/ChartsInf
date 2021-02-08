@@ -48,8 +48,9 @@ public class LineChartProperties extends Properties {
         this.fontUsed = fontUsed;
     }
 
-    public LineChartProperties(boolean showLegend, boolean showBottomValues, boolean showLeftValues, int leftValuesLabelsStep, int bottomValuesLabelStep, Font fontUsed) {
+    public LineChartProperties(boolean showLegend, boolean showBottomValues, boolean showLeftValues,Orientation legendOrientation, int leftValuesLabelsStep, int bottomValuesLabelStep, Font fontUsed) {
         this.showLegend = showLegend;
+        this.legendOrientation = legendOrientation;
         this.showBottomValues = showBottomValues;
         this.showLeftValues = showLeftValues;
         this.leftValuesLabelsStep = leftValuesLabelsStep;
