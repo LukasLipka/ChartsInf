@@ -5,7 +5,9 @@ import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import main.*;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 public class LineChart {
 
@@ -15,14 +17,16 @@ public class LineChart {
 
     public LineChartProperties properties;
 
+    double minBottomValue = Double.MAX_VALUE;
+    double minLeftValue = Double.MAX_VALUE;
+    double maxBottomValue = Double.MIN_VALUE;
+    double maxLeftValue = Double.MIN_VALUE;
+
     public void render(GraphicsContext ctx){
         //rendering lines and series
         ctx.setLineWidth(5);
 
-        double minBottomValue = Double.MAX_VALUE;
-        double minLeftValue = Double.MAX_VALUE;
-        double maxBottomValue = Double.MIN_VALUE;
-        double maxLeftValue = Double.MIN_VALUE;
+
 
         for (Label currentLabel : values) {
             minBottomValue = Math.min(minBottomValue, getMinValueOfList(currentLabel.bottomValues));
@@ -58,6 +62,7 @@ public class LineChart {
             }
         }
         // rendering legend
+        System.out.println(properties.showLegend+" not");
         if(properties.showLegend){
             ctx.setFont(properties.fontUsed);
             int x;
@@ -72,7 +77,7 @@ public class LineChart {
                     y = owner.getStartY() + (owner.getHeight() / 100) * 88;
                     break;
                 case RIGHT:
-                    x = owner.getStartX() + (owner.getWidth() / 100) * 75 - 150;
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 75;
                     y = owner.getStartY() + (owner.getHeight() / 100) * 50;
                     break;
                 case LEFT:
@@ -98,12 +103,18 @@ public class LineChart {
                 default:
                     throw new IllegalStateException("Unexpected value: " + properties.legendOrientation);
             }
+            int offset = 0;
+            ctx.setFont(Font.font(properties.fontUsed.getFamily(),50));
+            ctx.fillText("Legend",x-20,y-40);
+            ctx.setFont(properties.fontUsed);
             for(Label label:values){
                 Color labelColor = label.labelColor;
                 ctx.setFill(labelColor);
-                ctx.fillRect(x,y,10,10);
+                ctx.fillRect(x,y+offset,10,10);
                 ctx.setFill(Color.BLACK);
-                ctx.fillText(label.labelName, x + 15,y);
+                ctx.fillText(label.labelName, x + 15,y + offset + properties.fontUsed.getSize()/2);
+                ctx.fill();
+                offset +=20;
             }
 
         }
@@ -139,4 +150,14 @@ public class LineChart {
         this.properties.owner = this;
     }
 
+    public void renderGridilness(GraphicsContext ctx) {
+        if(properties.showBottomValues){
+            ctx.setFont(properties.fontUsed);
+            System.out.println(maxBottomValue);
+            for(int i = 0;i<=maxBottomValue;i+= properties.bottomValuesLabelStep){
+                ctx.fillText(String.valueOf(i),owner.getStartX()+i * properties.bottomValuesLabelStep,owner.getEndY()+30);
+            }
+        }
+        properties.showBottomValues = false;
+    }
 }

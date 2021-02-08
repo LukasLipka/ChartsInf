@@ -94,6 +94,7 @@ public class Main extends Application {
                 Integer.parseInt(readCommand(rawInst,"chart-field-start-y")),
                 Integer.parseInt(readCommand(rawInst,"chart-field-end-x")),
                 Integer.parseInt(readCommand(rawInst,"chart-field-end-y")),
+                readCommand(rawInst,"chart-field-name"),
                 new ChartFieldProperties(
                         readCommand(rawInst, "chart-field-props-render-border").equals("true"),
                 Integer.parseInt(readCommand(rawInst,"chart-field-props-border-width"))
@@ -129,15 +130,16 @@ public class Main extends Application {
                 throw new IllegalStateException("Unexpected value: " + readCommand(rawInst, "line-chart-props-orientation").toLowerCase());
         }
         LineChart chart = new LineChart(field,new LineChartProperties(
-                readCommand(rawInst,"line-chart-props-render-legend") == "true",
-                readCommand(rawInst,"line-chart-props-show-bottom-values") == "true",
-                readCommand(rawInst,"line-chart-props-show-left-values") == "true",
+                readCommand(rawInst, "line-chart-props-render-legend").equals("true"),
+                readCommand(rawInst, "line-chart-props-show-bottom-values").equals("true"),
+                readCommand(rawInst, "line-chart-props-show-left-values").equals("true"),
                 lineChartOrientation,
                 Integer.parseInt(readCommand(rawInst,"line-chart-props-left-values-step")),
                 Integer.parseInt(readCommand(rawInst,"line-chart-props-bottom-values-step")),
                 Font.font("Arial",15)
 
         ));
+
         int test = 0;
         //raw = raw.substring(raw.indexOf("label;") +6);
         while(rawInst.contains("label;")) {
@@ -175,6 +177,7 @@ public class Main extends Application {
                 break;
             }
             chart.render(ctx);
+            chart.renderGridilness(ctx);
         }
 
     }
