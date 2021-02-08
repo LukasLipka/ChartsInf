@@ -3,6 +3,7 @@ package main;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 import java.net.PortUnreachableException;
 import java.nio.file.Path;
@@ -31,9 +32,10 @@ public class ChartField {
     public void renderMe(GraphicsContext ctx){
         ctx.setStroke(properties.borderColor);
         ctx.setLineWidth(properties.borderWidth);
-        ctx.strokeRect(this.startX,this.startY,getWidth() - startX,getHeight() - startY);
+        ctx.strokeRect(this.startX,this.startY,getWidth(),getHeight());
         ctx.setFont(Font.font("Arial",50));
-        ctx.fillText(name,this.startX + getWidth()/2 - (name.length()/2)*50 ,this.startY + 50);
+        ctx.setTextAlign(TextAlignment.CENTER);
+        ctx.fillText(name,this.startX + getWidth()/2.0 ,this.startY + 50);
         ctx.stroke();
     }
 

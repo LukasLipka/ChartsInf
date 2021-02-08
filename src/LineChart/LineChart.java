@@ -3,9 +3,11 @@ package LineChart;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import main.*;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
@@ -22,11 +24,12 @@ public class LineChart {
     double maxBottomValue = Double.MIN_VALUE;
     double maxLeftValue = Double.MIN_VALUE;
 
+    double bottomStep = 0;
+    double leftStep = 0;
+
     public void render(GraphicsContext ctx){
         //rendering lines and series
         ctx.setLineWidth(5);
-
-
 
         for (Label currentLabel : values) {
             minBottomValue = Math.min(minBottomValue, getMinValueOfList(currentLabel.bottomValues));
@@ -38,8 +41,9 @@ public class LineChart {
         double bottomRange = maxBottomValue - minBottomValue;
         double leftRange = maxLeftValue - minLeftValue;
 
-        double bottomStep = owner.getWidth() / bottomRange;
-        double leftStep = owner.getHeight() / leftRange;
+        bottomStep = owner.getWidth() / bottomRange;
+        leftStep = owner.getHeight() / leftRange;
+
 
         for (Label currentLabel : values) {
             ctx.setStroke(currentLabel.labelColor);
@@ -105,6 +109,8 @@ public class LineChart {
             }
             int offset = 0;
             ctx.setFont(Font.font(properties.fontUsed.getFamily(),50));
+            ctx.setTextAlign(TextAlignment.LEFT);
+            ctx.setTextBaseline(VPos.BASELINE);
             ctx.fillText("Legend",x-20,y-40);
             ctx.setFont(properties.fontUsed);
             for(Label label:values){
@@ -112,7 +118,7 @@ public class LineChart {
                 ctx.setFill(labelColor);
                 ctx.fillRect(x,y+offset,10,10);
                 ctx.setFill(Color.BLACK);
-                ctx.fillText(label.labelName, x + 15,y + offset + properties.fontUsed.getSize()/2);
+                ctx.fillText(label.labelName, x + 15,y + offset+10);
                 ctx.fill();
                 offset +=20;
             }
@@ -142,8 +148,7 @@ public class LineChart {
 
     public LineChart(ChartField owner, LineChartProperties properties) {
         this.owner = owner;
-        this.properties = properties;
-        this.properties.owner = this;
+        addProperties(properties);
     }
     public void addProperties(LineChartProperties properties){
         this.properties = properties;
@@ -151,11 +156,12 @@ public class LineChart {
     }
 
     public void renderGridilness(GraphicsContext ctx) {
+        ctx.setTextAlign(TextAlignment.CENTER);
         if(properties.showBottomValues){
             ctx.setFont(properties.fontUsed);
             System.out.println(maxBottomValue);
             for(int i = 0;i<=maxBottomValue;i+= properties.bottomValuesLabelStep){
-                ctx.fillText(String.valueOf(i),owner.getStartX()+i * properties.bottomValuesLabelStep,owner.getEndY()+30);
+                ctx.fillText(String.valueOf(i),owner.getStartX()+ i*bottomStep,owner.getEndY()+30);
             }
         }
         properties.showBottomValues = false;
