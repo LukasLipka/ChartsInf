@@ -140,7 +140,7 @@ public class Main extends Application {
             Label label = new Label(Color.rgb(Integer.parseInt(readCommand(rawInst, "label-color-red")),
                     Integer.parseInt(readCommand(rawInst, "label-color-green")),
                     Integer.parseInt(readCommand(rawInst, "label-color-blue")),
-                    Double.parseDouble(readCommand(rawInst, "label-color-opacity"))), chart,  bottomValues,leftValues);
+                    Double.parseDouble(readCommand(rawInst, "label-color-opacity"))), chart, readCommand(rawInst,"label-name"), bottomValues,leftValues);
 
             chart.values.add(label);
             if(rawInst.contains("label;")) {

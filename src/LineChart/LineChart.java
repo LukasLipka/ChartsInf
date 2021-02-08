@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import main.*;
 
 public class LineChart {
@@ -60,16 +61,50 @@ public class LineChart {
         if(properties.showLegend){
             int x;
             int y;
-            switch (properties.legendOrientation){
-                case TOP: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12; break;
-                case BOTTOM: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 88; break;
-                case RIGHT: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
-                case LEFT: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
-                case RIGHT_BOTTOM_CORNER: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12; break;
-                case RIGHT_TOP_CORNER: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
-                case LEFT_BOTTOM_CORNER: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
-                case LEFT_TOP_CORNER: x = owner.getStartX() + (owner.getWidth()/2) - 150; y = owner.getStartY() + (owner.getHeight()/100) * 12;break;
+            switch (properties.legendOrientation) {
+                case TOP:
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 50 - 150;
+                    y = owner.getStartY() + (owner.getHeight() / 100) * 12;
+                    break;
+                case BOTTOM:
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 50 - 150;
+                    y = owner.getStartY() + (owner.getHeight() / 100) * 88;
+                    break;
+                case RIGHT:
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 75 - 150;
+                    y = owner.getStartY() + (owner.getHeight() / 100) * 50;
+                    break;
+                case LEFT:
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 25 - 150;
+                    y = owner.getStartY() + (owner.getHeight() / 100) * 50;
+                    break;
+                case RIGHT_BOTTOM_CORNER:
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 97 - 150;
+                    y = owner.getStartY() + (owner.getHeight() / 100) * 95;
+                    break;
+                case RIGHT_TOP_CORNER:
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 97 - 150;
+                    y = owner.getStartY() + (owner.getHeight() / 100) * 5;
+                    break;
+                case LEFT_BOTTOM_CORNER:
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 3 + 150;
+                    y = owner.getStartY() + (owner.getHeight() / 100) * 95;
+                    break;
+                case LEFT_TOP_CORNER:
+                    x = owner.getStartX() + (owner.getWidth() / 100) * 3 + 150;
+                    y = owner.getStartY() + (owner.getHeight() / 100) * 5;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + properties.legendOrientation);
             }
+            for(Label label:values){
+                Color labelColor = label.labelColor;
+                ctx.setFill(labelColor);
+                ctx.fillRect(x,y,10,10);
+                ctx.setFill(Color.BLACK);
+                ctx.fillText(label.labelName, x + 15,y);
+            }
+
         }
     }
 
@@ -96,5 +131,11 @@ public class LineChart {
     public LineChart(ChartField owner, LineChartProperties properties) {
         this.owner = owner;
         this.properties = properties;
+        this.properties.owner = this;
     }
+    public void addProperties(LineChartProperties properties){
+        this.properties = properties;
+        this.properties.owner = this;
+    }
+
 }

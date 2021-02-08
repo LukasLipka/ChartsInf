@@ -14,9 +14,11 @@ public class Label {
 
     public LineChart owner;
 
-    public Label(Color labelColor, LineChart owner,Integer[] bottomValues,Integer[] leftValues) {
-        this.leftValues.addAll(Arrays.asList(leftValues));
+    public String labelName;
 
+    public Label(Color labelColor, LineChart owner,String labelName,Integer[] bottomValues,Integer[] leftValues) {
+        this.leftValues.addAll(Arrays.asList(leftValues));
+        this.labelName = labelName;
         this.bottomValues.addAll(Arrays.asList(bottomValues));
         this.labelColor = labelColor;
         this.owner = owner;
